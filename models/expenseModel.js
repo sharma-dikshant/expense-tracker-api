@@ -18,7 +18,7 @@ const expenseSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  user: string,
+  user: String,
 });
 
 const Expense = mongoose.model("Expense", expenseSchema);
