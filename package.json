@@ -1,0 +1,14 @@
+{
+  "name": "expense-tracker-api",
+  "version": "1.0.0",
+  "description": "restful api for express tracker",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "dikshant sharma",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
