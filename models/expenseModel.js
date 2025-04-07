@@ -4,6 +4,7 @@ const expenseSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "Please provide a name"],
+    lowercase: true,
   },
   unitPrice: {
     type: Number,
