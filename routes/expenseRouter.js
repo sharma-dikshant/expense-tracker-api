@@ -1,8 +1,18 @@
 const express = require("express");
-const { getAllExpense } = require("./../controllers/expenseController");
+const {
+  getAllExpense,
+  createExpense,
+  updateExpense,
+  deleteExpense,
+} = require("./../controllers/expenseController");
 
 const router = express.Router();
 
-router.get("/", getAllExpense);
+router
+  .route("/")
+  .get(getAllExpense)
+  .post(createExpense)
+  .patch(updateExpense)
+  .delete(deleteExpense);
 
 module.exports = router;

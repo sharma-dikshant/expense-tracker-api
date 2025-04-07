@@ -19,7 +19,10 @@ const expenseSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  user: String,
+  user: {
+    type: String,
+    required: [true, "No user for this expense"],
+  },
 });
 
 const Expense = mongoose.model("Expense", expenseSchema);
