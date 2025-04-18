@@ -2,9 +2,12 @@ const Expense = require("./../models/expenseModel");
 
 exports.getAllExpense = async (req, res) => {
   try {
-    console.log(req.query);
-    const user = req.body.user;
+    // console.log(req.query);
+    // if (!req.body.user) req.body.user = "user1";
+    //TODO remove the default user
+    const user = req.body?.user || "user1";
 
+    console.log(user)
     //! Filtering
     const queryObj = { ...req.query, user };
     const deletedFields = ["page", "limit", "sort", "fields", "month", "year"];
