@@ -111,3 +111,51 @@ exports.updateExpense = async (req, res) => {
     });
   }
 };
+
+exports.getMonthExpense = async (req, res) => {
+  const monthNumber = req.params.month * 1;
+  const yearNumber = req.query.year * 1;
+  console.log(monthNumber, yearNumber);
+  const stats = await Expense.aggregate([
+    {
+      $addFields: {
+        month: { $month: "$date" },
+        year: { $year: "$date" },
+      },
+    },
+    {
+      $match: {
+        year: yearNumber,
+        month: monthNumber,
+      },
+    },
+    {
+      $group: {
+        _id: {
+          month: "$month",
+          year: "$year",
+        },
+        monthExpense: { $sum: { $multiply: ["$quantity", "$unitPrice"] } },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        month: "$_id.month",
+        year: "$_id.year",
+        monthExpense: 1,
+      },
+    },
+  ]);
+
+  res.status(200).json({
+    status: "success",
+    data: stats,
+  });
+};
+
+exports.getYearExpense = async (req, res) => {
+  res.status(200).json({
+    status: "success",
+  });
+};
