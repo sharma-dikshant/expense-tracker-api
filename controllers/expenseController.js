@@ -7,7 +7,7 @@ exports.getAllExpense = async (req, res) => {
     //TODO remove the default user
     const user = req.body?.user || "user1";
 
-    console.log(user)
+    console.log(user);
     //! Filtering
     const queryObj = { ...req.query, user };
     const deletedFields = ["page", "limit", "sort", "fields", "month", "year"];
@@ -95,8 +95,19 @@ exports.deleteExpense = async (req, res) => {
 };
 
 exports.updateExpense = async (req, res) => {
-  //TODO
-  res.status(200).json({
-    status: "success",
-  });
+  // console.log(req.params.id)
+  try {
+    const newDoc = await Expense.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    res.status(200).json({
+      status: "success",
+      data: newDoc,
+    });
+  } catch (error) {
+    return res.status(404).json({
+      status: "fail",
+      error,
+    });
+  }
 };

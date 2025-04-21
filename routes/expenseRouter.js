@@ -8,11 +8,7 @@ const {
 
 const router = express.Router();
 
-router
-  .route("/")
-  .get(getAllExpense)
-  .post(createExpense)
-  .patch(updateExpense)
-  .delete(deleteExpense);
+router.route("/").get(getAllExpense).post(createExpense).delete(deleteExpense);
+router.route("/:id").patch(updateExpense);
 
 module.exports = router;
