@@ -19,6 +19,12 @@ const expenseSchema = new mongoose.Schema(
       type: Date,
       // default: Date.now,
       required: [true, "Please provide date for expense"],
+      validate: {
+        validator: function (value) {
+          return value instanceof Date && !isNaN(value);
+        },
+        message: "Invalid date format",
+      },
     },
     user: {
       type: String,

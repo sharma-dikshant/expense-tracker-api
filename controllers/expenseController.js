@@ -75,9 +75,10 @@ exports.getAllExpense = async (req, res) => {
 
 exports.createExpense = async (req, res) => {
   try {
-    await Expense.create(req.body);
+    const newDoc = await Expense.create(req.body);
     res.status(200).json({
       status: "success",
+      data: newDoc,
     });
   } catch (err) {
     return res.status(404).json({
