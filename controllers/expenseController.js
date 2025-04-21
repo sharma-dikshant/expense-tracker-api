@@ -88,10 +88,18 @@ exports.createExpense = async (req, res) => {
 };
 
 exports.deleteExpense = async (req, res) => {
-  //TODO
-  res.status(201).json({
-    status: "success",
-  });
+  try {
+    // console.log(req.params.id)
+    await Expense.findByIdAndDelete(req.params.id);
+    res.status(202).json({
+      status: "success",
+    });
+  } catch (error) {
+    return res.status(404).json({
+      status: "fail",
+      error,
+    });
+  }
 };
 
 exports.updateExpense = async (req, res) => {
