@@ -163,7 +163,40 @@ exports.getMonthExpense = async (req, res) => {
 };
 
 exports.getYearExpense = async (req, res) => {
-  res.status(200).json({
-    status: "success",
-  });
+  const yearNumber = req.params.year * 1;
+  try {
+    const stats = await Expense.aggregate([
+      {
+        $addFields: {
+          month: { $month: "$date" },
+          year: { $year: "$date" },
+        },
+      },
+      {
+        $match: {
+          year: yearNumber,
+        },
+      },
+      {
+        $group: {
+          _id: "$month",
+          monthyExpense: { $sum: { $multiply: ["$quantity", "$unitPrice"] } },
+        },
+      },
+      {
+        $sort: {
+          _id: 1,
+        },
+      },
+    ]);
+    res.status(200).json({
+      status: "success",
+      data: stats,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      status: "error",
+      error,
+    });
+  }
 };
