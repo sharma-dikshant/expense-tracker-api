@@ -10,14 +10,16 @@ const expenseSchema = new mongoose.Schema(
     unitPrice: {
       type: Number,
       required: [true, "Please provide an amount"],
+      min: [1, "unit price should be greater than 1"],
     },
     quantity: {
       type: Number,
       required: [true, "Please provide a quantity"],
+      min: [1, "quantity should be greater than 1"],
     },
     date: {
       type: Date,
-      // default: Date.now,
+      max: [Date.now, "Date should be till today"],
       required: [true, "Please provide date for expense"],
       validate: {
         validator: function (value) {
