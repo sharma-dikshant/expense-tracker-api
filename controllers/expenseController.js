@@ -100,6 +100,7 @@ exports.updateExpense = async (req, res) => {
   try {
     const newDoc = await Expense.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
+      runValidators: true,
     });
     res.status(200).json({
       status: "success",
