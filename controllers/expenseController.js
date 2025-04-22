@@ -2,12 +2,10 @@ const Expense = require("./../models/expenseModel");
 
 exports.getAllExpense = async (req, res) => {
   try {
-    // console.log(req.query);
     // if (!req.body.user) req.body.user = "user1";
     //TODO remove the default user
     const user = req.body?.user || "user1";
 
-    console.log(user);
     //! Filtering
     const queryObj = { ...req.query, user };
     const deletedFields = ["page", "limit", "sort", "fields", "month", "year"];
@@ -35,7 +33,6 @@ exports.getAllExpense = async (req, res) => {
       ? Number(req.query.year)
       : new Date().getFullYear();
 
-    // console.log(month, year);
     // Create boundaries in UTC
     let startDate = new Date(Date.UTC(year, month - 1, 1));
     let endDate = new Date(Date.UTC(year, month, 1));
@@ -44,9 +41,6 @@ exports.getAllExpense = async (req, res) => {
       startDate = new Date(Date.UTC(year, 0, 1));
       endDate = new Date(Date.UTC(year, 11, 31));
     }
-
-    // console.log("Start Date:", startDate);
-    // console.log("End Date:", endDate);
 
     query = query.find({
       date: {
@@ -90,7 +84,6 @@ exports.createExpense = async (req, res) => {
 
 exports.deleteExpense = async (req, res) => {
   try {
-    // console.log(req.params.id)
     await Expense.findByIdAndDelete(req.params.id);
     res.status(202).json({
       status: "success",
@@ -104,7 +97,6 @@ exports.deleteExpense = async (req, res) => {
 };
 
 exports.updateExpense = async (req, res) => {
-  // console.log(req.params.id)
   try {
     const newDoc = await Expense.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -124,7 +116,6 @@ exports.updateExpense = async (req, res) => {
 exports.getMonthExpense = async (req, res) => {
   const monthNumber = req.params.month * 1;
   const yearNumber = req.query.year * 1;
-  console.log(monthNumber, yearNumber);
   const stats = await Expense.aggregate([
     {
       $addFields: {
