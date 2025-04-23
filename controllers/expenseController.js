@@ -2,10 +2,8 @@ const Expense = require("./../models/expenseModel");
 
 exports.getAllExpense = async (req, res) => {
   try {
-    // if (!req.body.user) req.body.user = "user1";
-    //TODO remove the default user
-    const user = req.body?.user || "user1";
-
+    const user = req?.user._id;
+    if (!user) throw Error("no user logged in!");
     //! Filtering
     const queryObj = { ...req.query, user };
     const deletedFields = ["page", "limit", "sort", "fields", "month", "year"];
@@ -69,7 +67,7 @@ exports.getAllExpense = async (req, res) => {
 
 exports.createExpense = async (req, res) => {
   try {
-    const newDoc = await Expense.create(req.body);
+    const newDoc = await Expense.create({ ...req.body, user: req.user._id });
     res.status(200).json({
       status: "success",
       data: newDoc,

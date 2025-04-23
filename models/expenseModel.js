@@ -29,8 +29,9 @@ const expenseSchema = new mongoose.Schema(
       },
     },
     user: {
-      type: String,
-      required: [true, "No user for this expense"],
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+      required: [true, "User is required to create expense"],
     },
   },
   { toJSON: { virtuals: true }, toObject: { virtuals: true } }
