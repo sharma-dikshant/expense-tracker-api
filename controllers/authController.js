@@ -35,7 +35,6 @@ exports.login = async (req, res) => {
     // });
     createSendToken(user, 200, res);
   } catch (error) {
-    console.log(error);
     return res.status(400).json({
       status: "fail",
       error: error.message,
@@ -100,13 +99,10 @@ exports.protect = async (req, res, next) => {
     });
   }
 
-  console.log(token);
-
   // 2) VERIFICATION OF TOKEN
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
   const currentUser = await User.findById(decoded.id);
-  // console.log(currentUser);
   if (!currentUser) {
     return res.status(400).json({
       status: "fail",
