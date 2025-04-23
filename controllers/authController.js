@@ -43,6 +43,14 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.logout = (req, res) => {
+  res.cookie("jwt", "loggedout", {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+  res.status(200).json({ status: "success" });
+};
+
 // JWT VERIFICATIONS
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -92,11 +100,13 @@ exports.protect = async (req, res, next) => {
     });
   }
 
+  console.log(token);
+
   // 2) VERIFICATION OF TOKEN
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
   const currentUser = await User.findById(decoded.id);
-
+  // console.log(currentUser);
   if (!currentUser) {
     return res.status(400).json({
       status: "fail",
