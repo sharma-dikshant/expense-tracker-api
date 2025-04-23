@@ -60,6 +60,21 @@ userSchema.methods.correctPassword = async function (
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
+//TODO instance method to verify password changed
+
+userSchema.methods.changePasswordAfter = function (JWTTimpstamp) {
+  if (this.passwordChangedAt) {
+    const changeTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+
+    return JWTTimpstamp < changeTimestamp;
+  }
+
+  return false;
+};
+
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;

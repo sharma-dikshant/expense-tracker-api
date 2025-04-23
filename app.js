@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
 
 const expenseRouter = require("./routes/expenseRouter");
 const userRouter = require("./routes/userRouter");
@@ -9,6 +10,7 @@ const app = express();
 //global middleware
 app.use(morgan("dev"));
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 
 //Routes
