@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const { promisify } = require("util");
 const User = require("./../models/userModel");
 exports.signUp = async (req, res) => {
   try {
@@ -77,7 +78,7 @@ exports.protect = async (req, res, next) => {
   // 1) GETTING TOKEN
   if (
     req.headers.authorization &&
-    req.headers.authorization.startWith("Bearer")
+    req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
   } else if (req.cookies.jwt) {
