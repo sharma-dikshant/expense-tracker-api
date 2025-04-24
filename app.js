@@ -9,7 +9,12 @@ const app = express();
 
 //global middleware
 app.use(morgan("dev"));
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://127.0.0.1:4000",
+    credentials: true, // <-- this allows cookies
+  })
+);
 app.use(cookieParser());
 app.use(express.json());
 

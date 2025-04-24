@@ -105,9 +105,9 @@ exports.updateExpense = async (req, res) => {
       data: newDoc,
     });
   } catch (error) {
-    return res.status(404).json({
+    return res.status(400).json({
       status: "fail",
-      error,
+      error: error.message,
     });
   }
 };

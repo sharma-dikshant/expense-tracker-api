@@ -64,7 +64,6 @@ const createSendToken = (user, statusCode, res) => {
       Date.now() + process.env.JWT_COOKIES_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
-    // secure: true,
   };
 
   res.cookie("jwt", token, cookiesOptions);
