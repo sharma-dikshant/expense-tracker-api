@@ -122,3 +122,10 @@ exports.protect = async (req, res, next) => {
   res.locals.user = currentUser; //This attaches the user to res.locals, which is useful for rendered views
   next();
 };
+
+exports.getUserFromJWT = (req, res, next) => {
+  res.status(200).json({
+    status: "success",
+    user: req.user,
+  });
+};
