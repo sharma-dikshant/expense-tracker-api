@@ -124,6 +124,7 @@ exports.getMonthExpense = async (req, res) => {
     },
     {
       $match: {
+        user: req.user._id,
         year: yearNumber,
         month: monthNumber,
       },
@@ -165,6 +166,7 @@ exports.getYearExpense = async (req, res) => {
       },
       {
         $match: {
+          user: req.user._id,
           year: yearNumber,
         },
       },
