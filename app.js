@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === "development") {
 
 app.use(
   cors({
-    origin: "https://unique-manatee-2c9d2b.netlify.app/",
+    origin: "https://unique-manatee-2c9d2b.netlify.app",
     credentials: true,
   })
 );
