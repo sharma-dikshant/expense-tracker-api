@@ -24,11 +24,13 @@ app.use(cookieParser());
 app.use(express.json());
 
 //Routes
+app.use("/api/expenses", expenseRouter);
+app.use("/api/users", userRouter);
+
 app.use("/", (req, res) => {
   res.status(200).send("welcome!");
 });
-app.use("/api/expenses", expenseRouter);
-app.use("/api/users", userRouter);
+
 app.use(errorController);
 
 module.exports = app;
