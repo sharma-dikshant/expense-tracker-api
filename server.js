@@ -1,9 +1,7 @@
-const express = require("express");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 dotenv.config({ path: "./config.env" });
-const app = require('./app');
-
+const app = require("./app");
 
 const DB = process.env.DATABASE_URL.replace(
   "<db_password>",
@@ -17,7 +15,6 @@ mongoose
   .then((con) => {
     console.log("DB connected! ");
   });
-
 
 const port = 3000;
 app.listen(port, () => {

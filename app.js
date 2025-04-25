@@ -8,7 +8,11 @@ const userRouter = require("./routes/userRouter");
 const app = express();
 
 //global middleware
-app.use(morgan("dev"));
+console.log(process.env.NODE_ENV);
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
+
 app.use(
   cors({
     origin: "http://127.0.0.1:4000",
