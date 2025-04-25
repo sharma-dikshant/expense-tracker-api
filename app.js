@@ -9,12 +9,16 @@ const errorController = require("./controllers/errorController");
 const app = express();
 
 //global middleware
-console.log(process.env.NODE_ENV);
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://unique-manatee-2c9d2b.netlify.app/",
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 app.use(express.json());
 
