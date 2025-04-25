@@ -16,7 +16,7 @@ if (process.env.NODE_ENV === "development") {
 
 app.use(
   cors({
-    origin: "http://127.0.0.1:4000",
+    origin: process.env.FRONTEND_ORIGIN,
     credentials: true, // <-- this allows cookies
   })
 );
