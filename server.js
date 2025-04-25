@@ -20,3 +20,15 @@ const port = 3000;
 app.listen(port, () => {
   console.log("server is connected !");
 });
+
+process.on("uncaughtException", (err) => {
+  console.log(err.name, err.message);
+  console.log("UNCAUGHT EXCEPTION! 💥 shutting down....");
+  process.exit(1);
+});
+
+process.on("unhandledRejection", (err) => {
+  console.log(err.name, err.message);
+  console.log("UNCAUGHT REJECTION! 💥 shutting down....");
+  process.exit(1);
+});
