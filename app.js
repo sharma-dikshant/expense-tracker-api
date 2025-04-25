@@ -14,12 +14,7 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-app.use(
-  cors({
-    origin: [process.env.FRONTEND_ORIGIN, "http://127.0.0.1:4000"],
-    credentials: true, // <-- this allows cookies
-  })
-);
+app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 
