@@ -1,48 +1,36 @@
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 const User = require("./../models/userModel");
-exports.signUp = async (req, res) => {
-  try {
-    const user = await User.create({
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password,
-      passwordConfirm: req.body.passwordConfirm,
-    });
 
-    createSendToken(user, 200, res);
-  } catch (error) {
-    return res.status(400).json({
-      status: "fail",
-      error: error.message,
-    });
+const AppError = require("./../utils/appError");
+const catchAsync = require("./../utils/catchAsync");
+
+exports.signUp = catchAsync(async (req, res, next) => {
+  const user = await User.create({
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+    passwordConfirm: req.body.passwordConfirm,
+  });
+
+  createSendToken(user, 200, res);
+});
+
+exports.login = catchAsync(async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password)
+    return next(new AppError("email and password is required"));
+  const user = await User.findOne({ email }).select("+password");
+
+  if (!user || !(await user.correctPassword(password, user.password))) {
+    return next(new AppError("invalid email or password"));
   }
-};
-exports.login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
 
-    if (!email || !password) throw Error("email and password is required");
-    const user = await User.findOne({ email }).select("+password");
+  createSendToken(user, 200, res);
+});
 
-    if (!user || !(await user.correctPassword(password, user.password))) {
-      throw Error("invalid email or password");
-    }
-
-    // res.status(200).json({
-    //   status: "success",
-    //   data: user,
-    // });
-    createSendToken(user, 200, res);
-  } catch (error) {
-    return res.status(400).json({
-      status: "fail",
-      error: error.message,
-    });
-  }
-};
-
-exports.logout = (req, res) => {
+exports.logout = (req, res, next) => {
   res.cookie("jwt", "loggedout", {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
@@ -92,10 +80,7 @@ exports.protect = async (req, res, next) => {
   }
 
   if (!token) {
-    return res.status(400).json({
-      status: "fail",
-      error: "you're not logged in! Please Login to get access",
-    });
+    return next(new AppError("you're not logged in from apperror", 400));
   }
 
   // 2) VERIFICATION OF TOKEN
@@ -103,18 +88,19 @@ exports.protect = async (req, res, next) => {
 
   const currentUser = await User.findById(decoded.id);
   if (!currentUser) {
-    return res.status(400).json({
-      status: "fail",
-      error: "the user belonging to this token does no longer exist",
-    });
+    return next(
+      new AppError("the user belonging to this token does no longer exist", 400)
+    );
   }
 
   // 3) CHECK IF USER CHANGED PASSWORD AFTER THE TOKEN ISSUED
   if (currentUser.changePasswordAfter(decoded.iat)) {
-    return res.status(400).json({
-      status: "fail",
-      error: "user has recently changed password! Please login again",
-    });
+    return next(
+      new AppError(
+        "user has recently changed password! Please login again",
+        400
+      )
+    );
   }
 
   // 4) GRANT ACCESS

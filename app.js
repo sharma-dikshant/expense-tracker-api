@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 
 const expenseRouter = require("./routes/expenseRouter");
 const userRouter = require("./routes/userRouter");
+const errorController = require("./controllers/errorController");
 const app = express();
 
 //global middleware
@@ -25,5 +26,6 @@ app.use(express.json());
 //Routes
 app.use("/api/expenses", expenseRouter);
 app.use("/api/users", userRouter);
+app.use(errorController);
 
 module.exports = app;
