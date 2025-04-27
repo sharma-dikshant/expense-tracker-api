@@ -9,13 +9,14 @@ const errorController = require("./controllers/errorController");
 const app = express();
 
 //global middleware
+console.log(process.env.NODE_ENV);
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
 app.use(
   cors({
-    origin: "https://unique-manatee-2c9d2b.netlify.app",
+    origin: ["https://unique-manatee-2c9d2b.netlify.app", "http://127.0.0.1:4000"],
     credentials: true,
   })
 );
