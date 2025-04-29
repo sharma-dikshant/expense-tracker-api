@@ -34,7 +34,7 @@ exports.logout = (req, res, next) => {
   res.cookie("jwt", "loggedout", {
     expires: new Date(Date.now() + 10 * 1000),
     secure: process.env.NODE_ENV === "production",
-    sameSite: "none",
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
     httpOnly: true,
   });
   res.status(200).json({ status: "success" });
@@ -55,8 +55,9 @@ const createSendToken = (user, statusCode, res) => {
     ),
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "None",
   };
+
+  if (process.env.NODE_ENV === "production") cookiesOptions.sameSite = "None";
 
   res.cookie("jwt", token, cookiesOptions);
   user.password = undefined;
