@@ -95,6 +95,17 @@ exports.updateExpense = catchAsync(async (req, res, next) => {
 exports.getMonthExpense = catchAsync(async (req, res, next) => {
   const monthNumber = req.params.month * 1;
   const yearNumber = req.query.year * 1;
+  const name = req.query.name;
+
+  const matchQuery = {
+    user: req.user._id,
+    year: yearNumber,
+    month: monthNumber,
+  };
+
+  if (name) {
+    matchQuery.name = name;
+  }
 
   if (!req.params.month || isNaN(monthNumber))
     return next(new AppError("valid month is required as param", 400));
@@ -109,11 +120,7 @@ exports.getMonthExpense = catchAsync(async (req, res, next) => {
       },
     },
     {
-      $match: {
-        user: req.user._id,
-        year: yearNumber,
-        month: monthNumber,
-      },
+      $match: matchQuery,
     },
     {
       $group: {
@@ -159,15 +166,29 @@ exports.getYearExpense = catchAsync(async (req, res, next) => {
         year: yearNumber,
       },
     },
+    // Group by month and item name to get monthly expense per item
     {
       $group: {
-        _id: "$month",
-        monthyExpense: { $sum: { $multiply: ["$quantity", "$unitPrice"] } },
+        _id: { month: "$month", name: "$name" },
+        itemExpense: { $sum: { $multiply: ["$quantity", "$unitPrice"] } },
+      },
+    },
+    // Group by month to get total monthly expense and list of items
+    {
+      $group: {
+        _id: "$_id.month",
+        totalMonthlyExpense: { $sum: "$itemExpense" },
+        items: {
+          $push: {
+            name: "$_id.name",
+            expense: "$itemExpense",
+          },
+        },
       },
     },
     {
       $sort: {
-        _id: 1,
+        _id: 1, // Sort by month
       },
     },
   ]);
