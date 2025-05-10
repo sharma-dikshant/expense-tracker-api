@@ -9,5 +9,6 @@ router.route("/logout").post(authController.logout);
 router
   .route("/getUser")
   .get(authController.protect, authController.getUserFromJWT);
+router.route("/forgetPassword").get(authController.forgetPassword);
 
 module.exports = router;

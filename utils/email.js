@@ -17,8 +17,8 @@ module.exports = class Email {
         host: "smtp.sendgrid.net",
         port: process.env.EMAIL_SENDGRID_PORT,
         auth: {
-          user: "apikey", 
-          pass: process.env.EMAIL_SENDGRID_API, 
+          user: "apikey",
+          pass: process.env.EMAIL_SENDGRID_API,
         },
       });
     }
@@ -56,5 +56,9 @@ module.exports = class Email {
 
   async sendWelcome() {
     await this.send("welcome", "Welcome to Expense Tracker!");
+  }
+
+  async sendResetPassword() {
+    await this.send("resetPassword", "Reset Your Password (valid for 10 mins)");
   }
 };

@@ -6,12 +6,16 @@ const cookieParser = require("cookie-parser");
 
 const expenseRouter = require("./routes/expenseRouter");
 const userRouter = require("./routes/userRouter");
+const viewRouter = require("./routes/viewRouter");
 const errorController = require("./controllers/errorController");
 const app = express();
 
 //global middleware
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
+//serving static files
+app.use(express.static(path.join(__dirname, "public")));
+
 console.log(process.env.NODE_ENV);
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
@@ -32,12 +36,9 @@ app.use(cookieParser());
 app.use(express.json());
 
 //Routes
+app.use("/", viewRouter);
 app.use("/api/expenses", expenseRouter);
 app.use("/api/users", userRouter);
-
-app.use("/", (req, res) => {
-  res.status(200).send("welcome!");
-});
 
 app.use(errorController);
 

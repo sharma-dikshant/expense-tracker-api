@@ -5,7 +5,6 @@ const User = require("./../models/userModel");
 const AppError = require("./../utils/appError");
 const catchAsync = require("./../utils/catchAsync");
 const Email = require("./../utils/email");
-const { url } = require("inspector");
 
 exports.signUp = catchAsync(async (req, res, next) => {
   const user = await User.create({
@@ -75,7 +74,7 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
-exports.protect = async (req, res, next) => {
+exports.protect = catchAsync(async (req, res, next) => {
   let token = "";
 
   // 1) GETTING TOKEN
@@ -116,7 +115,7 @@ exports.protect = async (req, res, next) => {
   req.user = currentUser;
   res.locals.user = currentUser; //This attaches the user to res.locals, which is useful for rendered views
   next();
-};
+});
 
 exports.getUserFromJWT = (req, res, next) => {
   res.status(200).json({
@@ -124,3 +123,41 @@ exports.getUserFromJWT = (req, res, next) => {
     user: req.user,
   });
 };
+
+exports.forgetPassword = catchAsync(async (req, res, next) => {
+  // get the user based on the email provided
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(new AppError("there is no user with this email", 404));
+  }
+
+  // generate the random reset token and store it th db
+  const resetToken = user.createPasswordResetToken();
+  await user.save({ validateBeforeSave: false });
+
+  // send the reset link back to user
+  try {
+    const resetURL = `${req.protocol}://${req.get(
+      "host"
+    )}/api/users/resetPassword/${resetToken}`;
+
+    await new Email(user, resetURL).sendResetPassword();
+  } catch (error) {
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+
+    await user.save({ validateBeforeSave: false });
+
+    return next(
+      new AppError(
+        "there was an error in sending email. Please try again later!",
+        500
+      )
+    );
+  }
+
+  res.status(200).json({
+    status: "success",
+    message: "Token sent to email!",
+  });
+});
