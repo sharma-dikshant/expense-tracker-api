@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
@@ -9,14 +10,21 @@ const errorController = require("./controllers/errorController");
 const app = express();
 
 //global middleware
+app.set("view engine", "pug");
+app.set("views", path.join(__dirname, "views"));
 console.log(process.env.NODE_ENV);
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
+const allowedOrigins = [
+  "https://unique-manatee-2c9d2b.netlify.app",
+  "http://127.0.0.1:4000",
+];
+
 app.use(
   cors({
-    origin: ["https://unique-manatee-2c9d2b.netlify.app", "http://127.0.0.1:4000"],
+    origin: allowedOrigins,
     credentials: true,
   })
 );

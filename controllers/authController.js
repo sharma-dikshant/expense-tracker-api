@@ -4,6 +4,8 @@ const User = require("./../models/userModel");
 
 const AppError = require("./../utils/appError");
 const catchAsync = require("./../utils/catchAsync");
+const Email = require("./../utils/email");
+const { url } = require("inspector");
 
 exports.signUp = catchAsync(async (req, res, next) => {
   const user = await User.create({
@@ -13,6 +15,8 @@ exports.signUp = catchAsync(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm,
   });
 
+  const url = "https://google.com";
+  await new Email(user, url).sendWelcome();
   createSendToken(user, 200, res);
 });
 

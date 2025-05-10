@@ -1,0 +1,70 @@
+doctype html
+html
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 30px auto;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+      h1 {
+        color: #333333;
+      }
+      p {
+        color: #555555;
+        line-height: 1.6;
+      }
+      ul {
+        margin-top: 10px;
+        padding-left: 20px;
+      }
+      ul li {
+        margin-bottom: 8px;
+      }
+      a.button {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 20px;
+        background-color: #4CAF50;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+      .footer {
+        margin-top: 40px;
+        font-size: 0.9rem;
+        color: #888888;
+        text-align: center;
+      }
+  body
+    .container
+      h1 Hello #{firstName} 👋
+      p
+        | Welcome to the 
+        strong Expense Tracker
+        |  app! We're excited to have you on board.
+      p Here's what you can do with our app:
+      ul
+        li ✅ Track expenses on a smart calendar
+        li 📷 Upload and store bills for every purchase
+        li 🤝 Manage borrowed or lent money with friends
+        li 📊 Visualize your expenses using interactive graphs
+        li 🧾 Export detailed expense summaries in PDF format
+      p Use the link below to verify your email and start managing your finances smarter:
+      a.button(href= url) Get Started
+      p If the button above doesn't work, copy and paste this URL into your browser:
+      p #{url}
+      .footer
+        p This email was sent to you by Expense Tracker App.
