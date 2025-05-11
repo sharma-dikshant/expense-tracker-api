@@ -35,12 +35,16 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.logout = (req, res, next) => {
-  res.cookie("jwt", "loggedout", {
-    expires: new Date(Date.now() + 10 * 1000),
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+  const cookiesOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIES_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
     httpOnly: true,
-  });
+    secure: process.env.NODE_ENV === "production",
+  };
+
+  if (process.env.NODE_ENV === "production") cookiesOptions.sameSite = "None";
+  res.cookie("jwt", "loggedout", cookiesOptions);
   res.status(200).json({ status: "success" });
 };
 
