@@ -3,5 +3,9 @@ exports.getLandingPage = (req, res, next) => {
 };
 
 exports.getForgetPassword = (req, res, next) => {
-  res.status(200).render("passwordResetForm");
-}
+  res.status(200).render("passwordForgetForm");
+};
+
+exports.getResetPassword = (req, res, next) => {
+  res.status(200).render('passwordResetForm');
+};

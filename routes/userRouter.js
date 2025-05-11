@@ -10,5 +10,6 @@ router
   .route("/getUser")
   .get(authController.protect, authController.getUserFromJWT);
 router.route("/forgetPassword").post(authController.forgetPassword);
+router.route("/resetPassword/:token").post(authController.resetPassword);
 
 module.exports = router;
