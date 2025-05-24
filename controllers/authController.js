@@ -15,7 +15,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm,
   });
 
-  const url = "https://google.com";
+  const url = "https://unique-manatee-2c9d2b.netlify.app/";
   await new Email(user, url).sendWelcome();
   createSendToken(user, 200, res);
 });
