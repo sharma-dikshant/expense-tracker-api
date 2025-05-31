@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const expenseRouter = require("./routes/expenseRouter");
 const userRouter = require("./routes/userRouter");
 const viewRouter = require("./routes/viewRouter");
+const aiRouter = require("./routes/aiRouter");
 const errorController = require("./controllers/errorController");
 const app = express();
 
@@ -39,6 +40,7 @@ app.use(express.json());
 app.use("/", viewRouter);
 app.use("/api/expenses", expenseRouter);
 app.use("/api/users", userRouter);
+app.use("/api/ai", aiRouter);
 
 app.use(errorController);
 

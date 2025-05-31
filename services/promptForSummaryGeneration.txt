@@ -1,0 +1,81 @@
+You will receive a single input: a stringified JSON array of yearly expense data. Each element has:
+  - "_id": integer year
+  - "totalYearlyExpense": integer total for the year
+  - "months": array of objects, each with:
+      - "month": integer 1–12
+      - "totalMonthlyExpense": integer total for that month
+      - "items": array of objects, each with:
+          - "name": string item name
+          - "expense": integer amount spent
+
+Generate a report that matches **exactly** the following format, with no deviations—no extra text, no narrative, no headings other than shown, and no punctuation or symbols beyond those specified. Use the rupee symbol “₹” before every numeric amount. If multiple years are present, repeat the entire block for each year in ascending order.
+
+---
+Year: [year]
+
+Total Expense: ₹[total]
+
+Monthly Expenses:
+
+Jan: ₹[amount] → Item1 ₹[x], Item2 ₹[y]
+Feb: ₹[amount] → Item1 ₹[x], Item2 ₹[y]
+Mar: ₹[amount] → Item1 ₹[x], Item2 ₹[y]
+Apr: ₹[amount] → Item1 ₹[x], Item2 ₹[y]
+May: ₹[amount] → Item1 ₹[x], Item2 ₹[y]
+Jun: ₹[amount] → Item1 ₹[x], Item2 ₹[y]
+Jul: ₹[amount] → Item1 ₹[x], Item2 ₹[y]
+Aug: ₹[amount] → Item1 ₹[x], Item2 ₹[y]
+Sep: ₹[amount] → Item1 ₹[x], Item2 ₹[y]
+Oct: ₹[amount] → Item1 ₹[x], Item2 ₹[y]
+Nov: ₹[amount] → Item1 ₹[x], Item2 ₹[y]
+Dec: ₹[amount] → Item1 ₹[x], Item2 ₹[y]
+
+Insights:
+
+Most Expensive Item: [item name] (₹[total])
+Most Frequent Item: [item name] ([count] times)
+Price Changes:
+[Item A]: ₹[old] → ₹[new] ([Mon] → [Mon])
+[Item B]: ₹[old] → ₹[new] ([Mon] → [Mon])
+Most Expensive Month: [Mon] (₹[amount])
+Least Expensive Month: [Mon] (₹[amount])
+Missing Data: [n] months
+---
+
+❗STRICT RULES:
+1. Do not output any text not shown above. Omit months that have no data entirely (i.e., do not list “Feb” if no record for February).
+2. Each label (“Year:”, “Total Expense:”, “Monthly Expenses:”, “Insights:”, etc.) must match exactly, including capitalization and punctuation.
+3. Use only line breaks to separate lines—no bullets, no additional indentation, no HTML or Markdown syntax.
+4. Abbreviate month names exactly as “Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec”.
+5. Show every numeric amount with a leading “₹” and no commas or decimals.
+6. For months that do exist, format as “Mon: ₹[amount] → [Item1] ₹[x], [Item2] ₹[y]” with items separated by comma+space.
+7. Under “Price Changes:”, list only items whose expense changed at least once; if an item did not change across all months, list as “[Item]: Constant (₹[amount])”.
+8. Each “Price Changes:” entry must be on its own line, with no extra text.
+9. If “items” array for a month contains only one entry, format as “Mon: ₹[amount] → [Item] ₹[x]” (omit comma).
+10. For multiple years, repeat the exact block without additional separators.
+11. If these rules cannot be followed exactly, output nothing or return an error.
+
+Example output for sample data:
+---
+Year: 2025
+
+Total Expense: ₹913
+
+Monthly Expenses:
+
+Jan: ₹289 → Recharge ₹219, Butter Milk ₹70
+Mar: ₹251 → Recharge ₹219, Milk ₹32
+Apr: ₹154 → Milk ₹64, Butter Milk ₹90
+May: ₹219 → Recharge ₹219
+
+Insights:
+
+Most Expensive Item: Recharge (₹657)
+Most Frequent Item: Recharge (3 times)
+Price Changes:
+Milk: ₹32 → ₹64 (Mar → Apr)
+Recharge: Constant (₹219)
+Most Expensive Month: Jan (₹289)
+Least Expensive Month: Apr (₹154)
+Missing Data: 8 months
+---
