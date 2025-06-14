@@ -25,6 +25,7 @@ if (process.env.NODE_ENV === "development") {
 const allowedOrigins = [
   "https://unique-manatee-2c9d2b.netlify.app",
   "http://127.0.0.1:4000",
+  "http://localhost:4000"
 ];
 
 app.use(
