@@ -1,13 +1,14 @@
-const path = require("path");
+const path    = require("path");
 const express = require("express");
-const cors = require("cors");
-const morgan = require("morgan");
+const cors    = require("cors");
+const morgan  = require("morgan");
 const cookieParser = require("cookie-parser");
 
 const expenseRouter = require("./routes/expenseRouter");
-const userRouter = require("./routes/userRouter");
-const viewRouter = require("./routes/viewRouter");
-const aiRouter = require("./routes/aiRouter");
+const userRouter    = require("./routes/userRouter");
+const viewRouter    = require("./routes/viewRouter");
+const aiRouter      = require("./routes/aiRouter");
+const recurringExpenseRouter = require("./routes/recurringExpenseRouter");
 const errorController = require("./controllers/errorController");
 const app = express();
 
@@ -42,6 +43,7 @@ app.use("/", viewRouter);
 app.use("/api/expenses", expenseRouter);
 app.use("/api/users", userRouter);
 app.use("/api/ai", aiRouter);
+app.use("/api/recurring-expenses", recurringExpenseRouter);
 
 app.use(errorController);
 

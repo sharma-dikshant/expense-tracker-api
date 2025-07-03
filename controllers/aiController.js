@@ -1,11 +1,14 @@
 const catchAsync = require("./../utils/catchAsync");
-const AppError   = require("./../utils/appError");
-const Expense    = require("./../models/expenseModel");
+const AppError = require("./../utils/appError");
+const Expense = require("./../models/expenseModel");
 const AIServices = require("./../services/AIService");
+
+//TODO 1. voice to add expense
+//TODO 2. reminder to add regular expense
 
 exports.getYearlySummary = catchAsync(async (req, res, next) => {
   //   console.log(req.user);
-  const t_past_years = parseInt(req.query.past);
+  const t_past_years = req.query.past ? parseInt(req.query.past) : 1;
   const minYear = new Date().getFullYear() - t_past_years;
 
   if (isNaN(minYear) || minYear < 2000 || t_past_years < 0)
