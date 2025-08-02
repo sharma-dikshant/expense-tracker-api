@@ -13,6 +13,7 @@ const tempRes = (req, res) => {
 router
   .route("/summary")
   .get(authController.protect, aiController.getYearlySummary);
+router.post("/voice", aiController.voiceCommand);
 router.route("/predict-expense").get(tempRes);
 router.route("/chat").get(tempRes);
 

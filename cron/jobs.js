@@ -3,7 +3,7 @@ const RecurringExpense = require("../models/RecurringExpenseModel");
 const Expense = require("../models/expenseModel");
 
 exports.startReccuringExpenseJob = () => {
-  cron.schedule("50 23 * * *", async () => {
+  cron.schedule("31 23 * * *", async () => {
     const now = new Date();
 
     // Normalize today to 00:00:00

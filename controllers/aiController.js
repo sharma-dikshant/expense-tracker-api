@@ -3,9 +3,6 @@ const AppError = require("./../utils/appError");
 const Expense = require("./../models/expenseModel");
 const AIServices = require("./../services/AIService");
 
-//TODO 1. voice to add expense
-//TODO 2. reminder to add regular expense
-
 exports.getYearlySummary = catchAsync(async (req, res, next) => {
   //   console.log(req.user);
   const t_past_years = req.query.past ? parseInt(req.query.past) : 1;
@@ -74,5 +71,14 @@ exports.getYearlySummary = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: summary,
+  });
+});
+
+exports.voiceCommand = catchAsync(async (req, res, next) => {
+  // just analysis the expense and recurring expense related commands
+  const response = await AIServices.voiceCommandforExpenses(req.body.text);
+  res.status(200).json({
+    status: "success",
+    message: response,
   });
 });
