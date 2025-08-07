@@ -1,26 +1,29 @@
 const mongoose = require("mongoose");
-
 const recurringExpenseSchema = mongoose.Schema({
   user: {
     type: mongoose.Schema.ObjectId,
     ref: "User",
     required: [true, "owner is required!"],
   },
+  budget: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Budget",
+  },
   name: {
     type: String,
     lowercase: true,
     required: [true, "recurring expense should have title"],
   },
-  unitPrice: {
+  amount: {
     type: Number,
     required: [true, "Please provide an amount"],
-    min: [1, "unit price should be greater than 1"],
+    min: [1, "amount should be greater than 1"],
   },
-  quantity: {
-    type: Number,
-    required: [true, "Please provide a quantity"],
-    min: [1, "quantity should be greater than 1"],
+  category: {
+    type: String,
+    default: "none",
   },
+  description: String,
   frequency: {
     type: String,
     enum: ["daily", "weekly", "monthly"],

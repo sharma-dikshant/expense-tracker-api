@@ -41,10 +41,11 @@ exports.startReccuringExpenseJob = () => {
         }
 
         const expDoc = new Expense({
-          name: exp.name,
-          unitPrice: exp.unitPrice,
-          quantity: exp.quantity,
           user: exp.user,
+          budget: exp.budget,
+          amount: exp.amount,
+          category: exp.category,
+          description: exp.description,
           date: now,
         });
 

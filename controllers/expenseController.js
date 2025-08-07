@@ -1,6 +1,87 @@
+const Budget = require("../models/budgetModel");
 const Expense = require("./../models/expenseModel");
 const AppError = require("./../utils/appError");
 const catchAsync = require("./../utils/catchAsync");
+const ApiResponse = require("./../utils/ApiResponse");
+
+exports.createExpense = catchAsync(async (req, res, next) => {
+  const { amount, budget } = req.body;
+  if (budget) {
+    const newBudgetDoc = await Budget.findByIdAndUpdate(
+      budget,
+      {
+        add: amount,
+      },
+      { new: true }
+    );
+
+    if (!newBudgetDoc)
+      return next(new AppError("failed to add expense in budget", 400));
+  }
+  const newDoc = await Expense.create({ ...req.body, user: req.user._id });
+
+  return new ApiResponse(200, "success", newDoc).send(res);
+});
+
+exports.deleteExpense = catchAsync(async (req, res, next) => {
+  const prevExpense = await Expense.findById(req.params.id);
+  if (prevExpense.budget) {
+    const newBudgetDoc = await Budget.findByIdAndUpdate(
+      prevExpense.budget,
+      {
+        add: -1 * prevExpense.amount,
+      },
+      { new: true }
+    );
+
+    if (!newBudgetDoc)
+      return next(new AppError("failed to rollback expense in budget", 400));
+  }
+  const doc = await Expense.findByIdAndDelete(req.params.id);
+
+  if (!doc) return next(new AppError("No expense found with that ID", 404));
+
+  return new ApiResponse(204, "success", null).send(200);
+});
+
+exports.updateExpense = catchAsync(async (req, res, next) => {
+  const prevExpense = await Expense.findById(req.params.id);
+  if (req.body.budget || req.body.amount) {
+    if (prevExpense.budget) {
+      const newBudgetDoc = await Budget.findByIdAndUpdate(
+        prevExpense.budget,
+        {
+          add: -1 * prevExpense.amount,
+        },
+        { new: true }
+      );
+
+      if (!newBudgetDoc)
+        return next(new AppError("failed to add expense in budget"));
+    }
+
+    if (req.body.budget) {
+      const newBudgetDoc = await Budget.findByIdAndUpdate(
+        req.body.budget,
+        {
+          add: req.body.amount || prevExpense.amount,
+        },
+        { new: true }
+      );
+
+      if (!newBudgetDoc)
+        return next(new AppError("failed to add expense in budget"));
+    }
+  }
+  const newDoc = await Expense.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!newDoc) return next(new AppError("No expense found with that ID", 404));
+
+  return new ApiResponse(200, "success", newDoc).send(res);
+});
 
 exports.getAllExpense = catchAsync(async (req, res, next) => {
   const user = req?.user._id;
@@ -51,45 +132,7 @@ exports.getAllExpense = catchAsync(async (req, res, next) => {
   //awaiting query
   const expenses = await query;
 
-  res.status(200).json({
-    status: "success",
-    results: expenses.length,
-    data: {
-      expenses,
-    },
-  });
-});
-
-exports.createExpense = catchAsync(async (req, res, next) => {
-  const newDoc = await Expense.create({ ...req.body, user: req.user._id });
-  res.status(200).json({
-    status: "success",
-    data: newDoc,
-  });
-});
-
-exports.deleteExpense = catchAsync(async (req, res, next) => {
-  const doc = await Expense.findByIdAndDelete(req.params.id);
-
-  if (!doc) return next(new AppError("No expense found with that ID", 404));
-
-  res.status(202).json({
-    status: "success",
-  });
-});
-
-exports.updateExpense = catchAsync(async (req, res, next) => {
-  const newDoc = await Expense.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
-
-  if (!newDoc) return next(new AppError("No expense found with that ID", 404));
-
-  res.status(200).json({
-    status: "success",
-    data: newDoc,
-  });
+  return new ApiResponse(200, "success", expenses).send(res);
 });
 
 exports.getMonthExpense = catchAsync(async (req, res, next) => {
@@ -141,10 +184,7 @@ exports.getMonthExpense = catchAsync(async (req, res, next) => {
     },
   ]);
 
-  res.status(200).json({
-    status: "success",
-    data: stats,
-  });
+  return new ApiResponse(200, "success", stats).send(res);
 });
 
 exports.getYearExpense = catchAsync(async (req, res, next) => {
@@ -192,8 +232,6 @@ exports.getYearExpense = catchAsync(async (req, res, next) => {
       },
     },
   ]);
-  res.status(200).json({
-    status: "success",
-    data: stats,
-  });
+
+  return new ApiResponse(200, "success", stats).send(res);
 });

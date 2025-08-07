@@ -1,6 +1,6 @@
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
-const RecurringExpense = require("./../models/RecurringExpenseModel");
+const RecurringExpense = require("../models/RecurringExpenseModel");
 
 exports.createRecurringExpense = catchAsync(async (req, res, next) => {
   const doc = await RecurringExpense.create({

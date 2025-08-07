@@ -4,9 +4,10 @@ const cors    = require("cors");
 const morgan  = require("morgan");
 const cookieParser = require("cookie-parser");
 
-const expenseRouter = require("./routes/expenseRouter");
-const userRouter    = require("./routes/userRouter");
 const viewRouter    = require("./routes/viewRouter");
+const userRouter    = require("./routes/userRouter");
+const expenseRouter = require("./routes/expenseRouter");
+const budgetRouter  = require("./routes/budgetRouter");
 const aiRouter      = require("./routes/aiRouter");
 const recurringExpenseRouter = require("./routes/recurringExpenseRouter");
 const errorController = require("./controllers/errorController");
@@ -19,9 +20,9 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 
 console.log(process.env.NODE_ENV);
-if (process.env.NODE_ENV === "development") {
-  app.use(morgan("dev"));
-}
+app.use(morgan("dev"));
+// if (process.env.NODE_ENV === "development") {
+// }
 
 const allowedOrigins = [
   "https://unique-manatee-2c9d2b.netlify.app",
@@ -40,10 +41,11 @@ app.use(express.json());
 
 //Routes
 app.use("/", viewRouter);
-app.use("/api/expenses", expenseRouter);
 app.use("/api/users", userRouter);
-app.use("/api/ai", aiRouter);
+app.use("/api/expenses", expenseRouter);
+app.use("/api/budgets", budgetRouter);
 app.use("/api/recurring-expenses", recurringExpenseRouter);
+app.use("/api/ai", aiRouter);
 
 app.use(errorController);
 
