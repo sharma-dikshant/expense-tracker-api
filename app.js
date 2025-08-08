@@ -8,6 +8,7 @@ const viewRouter    = require("./routes/viewRouter");
 const userRouter    = require("./routes/userRouter");
 const expenseRouter = require("./routes/expenseRouter");
 const budgetRouter  = require("./routes/budgetRouter");
+const debtEntryRouter = require('./routes/debtEntryRouter');
 const aiRouter      = require("./routes/aiRouter");
 const recurringExpenseRouter = require("./routes/recurringExpenseRouter");
 const errorController = require("./controllers/errorController");
@@ -44,6 +45,7 @@ app.use("/", viewRouter);
 app.use("/api/users", userRouter);
 app.use("/api/expenses", expenseRouter);
 app.use("/api/budgets", budgetRouter);
+app.use("/api/debts", debtEntryRouter);
 app.use("/api/recurring-expenses", recurringExpenseRouter);
 app.use("/api/ai", aiRouter);
 
