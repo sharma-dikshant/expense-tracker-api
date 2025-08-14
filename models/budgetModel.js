@@ -35,7 +35,6 @@ budgetSchema.pre("findOneAndUpdate", async function (next) {
   if (!updates.add) return next();
 
   const doc = await this.model.findOne(this.getQuery());
-  console.log(doc.spend, updates.add, doc.limit)
   if (Number(doc.spend) + Number(updates.add) > Number(doc.limit)) {
     return next(new AppError("Limit exceed", 400));
   }
