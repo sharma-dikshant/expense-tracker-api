@@ -5,6 +5,7 @@ const catchAsync = require("./../utils/catchAsync");
 const ApiResponse = require("./../utils/ApiResponse");
 
 exports.createExpense = catchAsync(async (req, res, next) => {
+  //? date should be in YYYY-MM-DD
   const { amount, budget } = req.body;
   if (budget) {
     const newBudgetDoc = await Budget.findByIdAndUpdate(
@@ -15,9 +16,12 @@ exports.createExpense = catchAsync(async (req, res, next) => {
       { new: true }
     );
 
+    console.log(budget)
+    
     if (!newBudgetDoc)
       return next(new AppError("failed to add expense in budget", 400));
   }
+  console.log(req.body)
   const newDoc = await Expense.create({ ...req.body, user: req.user._id });
 
   return new ApiResponse(200, "success", newDoc).send(res);
@@ -138,17 +142,12 @@ exports.getAllExpense = catchAsync(async (req, res, next) => {
 exports.getMonthExpense = catchAsync(async (req, res, next) => {
   const monthNumber = req.params.month * 1;
   const yearNumber = req.query.year * 1;
-  const name = req.query.name;
 
   const matchQuery = {
     user: req.user._id,
     year: yearNumber,
     month: monthNumber,
   };
-
-  if (name) {
-    matchQuery.name = name;
-  }
 
   if (!req.params.month || isNaN(monthNumber))
     return next(new AppError("valid month is required as param", 400));
@@ -170,8 +169,9 @@ exports.getMonthExpense = catchAsync(async (req, res, next) => {
         _id: {
           month: "$month",
           year: "$year",
+          category: "$category",
         },
-        monthExpense: { $sum: { $multiply: ["$quantity", "$unitPrice"] } },
+        monthExpense: { $sum: "$amount" },
       },
     },
     {
@@ -179,6 +179,7 @@ exports.getMonthExpense = catchAsync(async (req, res, next) => {
         _id: 0,
         month: "$_id.month",
         year: "$_id.year",
+        category: "$_id.category",
         monthExpense: 1,
       },
     },
@@ -209,8 +210,8 @@ exports.getYearExpense = catchAsync(async (req, res, next) => {
     // Group by month and item name to get monthly expense per item
     {
       $group: {
-        _id: { month: "$month", name: "$name" },
-        itemExpense: { $sum: { $multiply: ["$quantity", "$unitPrice"] } },
+        _id: { month: "$month" },
+        itemExpense: { $sum: "$amount" },
       },
     },
     // Group by month to get total monthly expense and list of items
@@ -220,7 +221,7 @@ exports.getYearExpense = catchAsync(async (req, res, next) => {
         totalMonthlyExpense: { $sum: "$itemExpense" },
         items: {
           $push: {
-            name: "$_id.name",
+            month: "$_id.month",
             expense: "$itemExpense",
           },
         },

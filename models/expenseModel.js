@@ -20,7 +20,7 @@ const expenseSchema = new mongoose.Schema(
         validator: function (value) {
           return value instanceof Date && !isNaN(value);
         },
-        message: "Invalid date format",
+        message: "Invalid date",
       },
     },
     user: {

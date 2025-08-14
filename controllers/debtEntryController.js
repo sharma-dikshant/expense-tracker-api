@@ -1,4 +1,4 @@
-const DebtEntry = require("./../models/debtEntry");
+const DebtEntry = require("./../models/debtEntryModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
 const ApiResponse = require("./../utils/ApiResponse");
@@ -30,8 +30,6 @@ exports.softDeleteDebtEntry = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllDebtEntryOfLoggedInUser = catchAsync(async (req, res, next) => {
-  console.log("fdg");
   const docs = await DebtEntry.find({ user: req.user._id }).exec();
-  console.log("found")
   return new ApiResponse(200, "success", docs).send(res);
 });

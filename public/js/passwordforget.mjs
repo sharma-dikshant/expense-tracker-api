@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
     forgetPasswordForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const email = document.querySelector("#forget_password_email").value;
-      console.log(email);
       try {
         axios.post("/api/users/forgetPassword", { email });
         statusMsg.textContent = "Reset Email Sent!";
