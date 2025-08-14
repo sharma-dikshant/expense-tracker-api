@@ -2,21 +2,16 @@ const mongoose = require("mongoose");
 
 const expenseSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: [true, "Please provide a name"],
-      lowercase: true,
-    },
-    unitPrice: {
+    amount: {
       type: Number,
       required: [true, "Please provide an amount"],
-      min: [1, "unit price should be greater than 1"],
+      min: [1, "amount should be greater than 1"],
     },
-    quantity: {
-      type: Number,
-      required: [true, "Please provide a quantity"],
-      min: [1, "quantity should be greater than 1"],
+    category: {
+      type: String,
+      default: "none",
     },
+    description: String,
     date: {
       type: Date,
       max: [Date.now, "Date should be till today"],
@@ -25,7 +20,7 @@ const expenseSchema = new mongoose.Schema(
         validator: function (value) {
           return value instanceof Date && !isNaN(value);
         },
-        message: "Invalid date format",
+        message: "Invalid date",
       },
     },
     user: {
@@ -33,13 +28,13 @@ const expenseSchema = new mongoose.Schema(
       ref: "User",
       required: [true, "User is required to create expense"],
     },
+    budget: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Budget",
+    },
   },
   { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
-
-expenseSchema.virtual("totalPrice").get(function () {
-  return this.quantity * this.unitPrice;
-});
 
 const Expense = mongoose.model("Expense", expenseSchema);
 module.exports = Expense;

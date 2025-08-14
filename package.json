@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "powershell -Command \"$env:NODE_ENV='development'; nodemon server.js\"",
+    "dev": "set NODE_ENV=development & nodemon server.js",
     "prod": "powershell -Command \"$env:NODE_ENV='production'; nodemon server.js\""
   },
   "author": "dikshant sharma",
   "license": "ISC",
   "dependencies": {
+    "@google/genai": "^1.3.0",
     "axios": "^1.9.0",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
@@ -21,6 +22,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.2",
     "morgan": "^1.10.0",
+    "node-cron": "^4.2.0",
     "nodemailer": "^7.0.3",
     "pug": "^3.0.3",
     "validator": "^13.15.0"
